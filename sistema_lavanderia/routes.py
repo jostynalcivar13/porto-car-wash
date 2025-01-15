@@ -6,14 +6,10 @@ from datetime import datetime
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from flask import Blueprint
+from . import mysql
 
 routes = Blueprint('routes', __name__)
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'admin'
-app.config['MYSQL_PASSWORD'] = '1234'
-app.config['MYSQL_DB'] = 'sistema_lavanderia'
-mysql = MySQL(app)
 cursor = mysql.connection.cursor()
 
 @app.route('/logout')
