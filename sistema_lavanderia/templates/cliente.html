@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Administrador de Clientes{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='estilos_admin_ser_pro.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <h1><i class="bi bi-person-search"></i> Buscar Información de Clientes</h1>
+            </div>
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Introduce ID del cliente" id="id_cliente" aria-label="ID del cliente">
+                        <button class="btn btn-primary" id="buscarCliente">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </div>
+                    <div id="resultado" class="mt-3">
+                        <!-- Aquí se mostrarán los datos del cliente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById("buscarCliente").addEventListener("click", function () {
+        const cedulaCliente = document.getElementById("id_cliente").value;
+
+        // Realizar una solicitud al servidor
+        fetch('/cliente', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cedula: cedulaCliente })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Cliente no encontrado");
+            }
+            return response.json();
+        })
+        .then(data => {
+            let resultado = `
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary"><i class="bi bi-person-badge"></i> Información del Cliente:</h4>
+                        <p><strong>ID:</strong> ${data.id_cliente}</p>
+                        <p><strong>Nombres:</strong> ${data.nombres}</p>
+                        <p><strong>Apellidos:</strong> ${data.apellidos}</p>
+            `;
+            if (data.cedula) {
+                resultado += `<p><strong>Cédula:</strong> ${data.cedula}</p>`;
+            }
+            if (data.ruc) {
+                resultado += `<p><strong>RUC:</strong> ${data.ruc}</p>`;
+            }
+            resultado += `<p><strong>Vehículo:</strong> ${data.vehiculo}</p>`;
+            resultado += `</div></div>`;
+
+            document.getElementById("resultado").innerHTML = resultado;
+        })
+        .catch(error => {
+            document.getElementById("resultado").innerHTML = `
+                <div class="alert alert-danger text-center" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> ${error.message}
+                </div>
+            `;
+        });
+    });
+</script>
+{% endblock %}

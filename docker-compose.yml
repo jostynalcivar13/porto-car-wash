@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_lavanderia
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 2511
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: sistema_lavanderia
+    volumes:
+      - ./sistema_lavanderia/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"
+
+  flask:
+    build: .
+    container_name: flask_lavanderia
+    restart: always
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=1234
+      - MYSQL_DB=sistema_lavanderia
+    ports:
+      - "90:5000"
+    depends_on:
+      - mysql

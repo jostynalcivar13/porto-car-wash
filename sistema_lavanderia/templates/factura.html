@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Factura{% endblock %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header text-center bg-primary text-white">
+            <h2>Factura</h2>
+        </div>
+        <div class="card-body">
+            <form action="/generar-factura" method="POST">
+                <div class="mb-3">
+                    <label for="id_factura" class="form-label">Número de Factura</label>
+                    <input type="text" id="id_factura" name="id_factura" class="form-control" value="{{ id_factura }}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="nombres" class="form-label">Nombre del Cliente</label>
+                    <input type="text" id="nombres" name="nombres" class="form-control" placeholder="Ingrese el nombre">
+                </div>
+                <div class="mb-3">
+                    <label for="ci_ruc" class="form-label">Cédula/RUC</label>
+                    <input type="text" id="ci_ruc" name="ci_ruc" class="form-control" placeholder="Ingrese el CI o RUC">
+                </div>
+                <!-- Tipo de Servicio -->
+                <div class="mb-3">
+                    <label for="servicio" class="form-label">Tipo de Servicio:</label>
+                    <select class="form-select " id="servicio" name="servicio" required>
+                        <option value="" disabled selected>Seleccione un servicio</option>
+                        {% for servicio in servicios %}
+                        <option value="{{ loop.index }}">{{ servicio[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="total" class="form-label">Total</label>
+                    <input type="number" id="total" name="total" class="form-control" placeholder="">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Generar Factura</button>
+                    <button type="reset" class="btn btn-secondary">Limpiar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "plantilla_base_user.html" %}
+
+{%block title%} Registro {%endblock%}
+
+{%block extra_css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='estilo_registro.css') }}">
+{%endblock%}
+{% block content %}
+<div class="containerPrin mt-5">
+    <h2 class="text-center text-danger mb-4">Formulario de Registro</h2>
+    <form id="registroForm" method="POST">
+  
+        <div class="mb-3">
+            <label for="usuario" class="form-label text-white">Nombre de Usuario</label>
+            <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Ingrese su nombre de usuario" required>
+        </div>
+
+ 
+        <div class="mb-3">
+            <label for="clave" class="form-label text-white">Contraseña</label>
+            <input type="password" class="form-control" id="clave" name="clave" placeholder="Ingrese su contraseña" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="nombres" class="form-label text-white">Nombres</label>
+            <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Ingrese sus nombres" required>
+        </div>
+        <div class="mb-3">
+            <label for="apellidos" class="form-label text-white">Apellidos</label>
+            <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Ingrese sus apellidos" required>
+        </div>
+        <div class="mb-3">
+            <label for="cedula" class="form-label text-white">Cédula</label>
+            <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Ingrese su cédula" >
+        </div>
+        <div class="mb-3">
+            <label for="ruc" class="form-label text-white">RUC</label>
+            <input type="text" class="form-control" id="ruc" name="ruc" placeholder="Ingrese su RUC" >
+        </div>
+        <div class="mb-3">
+            <label for="telefono" class="form-label text-white">Teléfono</label>
+            <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese su teléfono" required>
+        </div>
+        <div class="mb-3">
+            <label for="vehiculo" class="form-label text-white">Vehículo</label>
+            <input type="text" class="form-control" id="vehiculo" name="vehiculo" placeholder="Ingrese su vehículo" required>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" id="registro" class="btn btn-success w-50">Registrar</button>
+        </div>
+        
+    </form>
+</div>
+
+<script>
+    document.getElementById("registroForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const user = document.getElementById("usuario").value;
+        const pass = document.getElementById("clave").value;
+        const nombre= document.getElementById("nombres").value;
+        const apellido=document.getElementById("apellidos").value;
+        const cedula= document.getElementById("cedula").value;
+        const ruc= document.getElementById("ruc").value;
+        const telefono=document.getElementById("telefono").value;
+        const vehiculo= document.getElementById("vehiculo").value;
+
+        const errorMessage = document.getElementById("errorMessage");
+
+        const response = await fetch('/registroUsuario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user, pass,nombre,apellido, cedula,ruc,telefono,vehiculo })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            alert(`Bienvenido. Registrado con éxito.`);
+            window.location.href = "/";
+          
+        } else {
+            const errorData = await response.json();
+            alert(errorData.error);
+            
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "plantilla_base_user.html" %}
+
+{% block title %}Agendamiento de Turnos{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+<!-- Contenedor Principal -->
+<div class="container my-5">
+  <div class="row justify-content-center align-items-start">
+    <!-- Columna de Imagen -->
+    <div class="col-md-5 mb-4 mb-md-0 text-center text-md-start">
+      <img src="{{ url_for('static', filename='images/comunicado_car.jpg') }}" 
+           alt="Descripción de la imagen" 
+           class="img-fluid rounded border border-3 border-success imagen_comunicado">
+    </div>
+
+    <!-- Columna del Formulario -->
+    <div class="col-md-6 bg-light p-5 rounded border border-3 border-success shadow my-5">
+      <h2 class="text-center text-success mb-4">Agendamiento de Turnos</h2>
+      <form id="formTurno" >
+        <!-- Número de Cédula -->
+        <div class="mb-3">
+          <label for="cedula" class="form-label text-success">Número de Cédula:</label>
+          {% if session.user_cedula %}
+          <span class="me-3 text-danger">{{ session.user_cedula }}</span>
+          {% endif %}
+          
+        </div>
+
+        <!-- Tipo de Servicio -->
+        <div class="mb-3">
+          <label for="servicio" class="form-label text-success">Tipo de Servicio:</label>
+          <select class="form-select border-danger" id="servicio" name="servicio" required>
+              <option value="" disabled selected>Seleccione un servicio</option>
+              {% for servicio in servicios %}
+              <option value="{{ loop.index }}">{{ servicio[0] }}</option>
+              {% endfor %}
+          </select>
+        </div>
+
+        <!-- Fecha -->
+        <div class="mb-3">
+          <label for="fecha" class="form-label text-success">Fecha:</label>
+          <input type="date" class="form-control border-danger" id="fecha" name="fecha" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="hora" class="form-label text-success">Hora:</label>
+          <input type="time" class="form-control border-danger" id="hora" name="hora" required step="3600">
+        </div>
+        
+
+        <!-- Botón de Envío -->
+        <div class="d-grid">
+          <button type="submit" class="btn btn-success text-white fw-bold">
+            {% if session.user_cedula %}
+            Agendar Turno
+        {% else %}
+            Inicie sesión para agendar
+        {% endif %}
+          </button>
+        </div>
+      </form>
+      <div id="mensajeError" class="error mt-3" style="display: none;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+ // Función para agregar turno
+ document.getElementById("formTurno").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const servicio = document.getElementById("servicio").value;
+        const fecha = document.getElementById("fecha").value;
+        const hora = parseFloat(document.getElementById("hora").value);
+
+        if (!servicio || !fecha ||!hora) {
+            document.getElementById("mensajeError").innerText = 'Por favor, llena todos los campos correctamente.';
+            document.getElementById("mensajeError").style.display = 'block';
+            return;
+        }
+
+        fetch('/turnoAgregar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                servicio: servicio,
+                fecha: fecha,
+                hora: hora
+            })
+        })
+        .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.error || "Error al guardar el turno.");
+            });
+        }
+        return response.json();
+    })
+        .then(data => {
+            alert('Turno guardado correctamente.');
+            document.getElementById("formTurno").reset();
+        })
+        .catch(error => {
+            document.getElementById("mensajeError").innerText = error.message;
+            document.getElementById("mensajeError").style.display = 'block';
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "plantilla_base_user.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block extra_css %}
+
+
+{% endblock %}
+
+{% block content %}
+<div id="carrusel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-inner">
+      {% for itemimg in ima %}
+      <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+          <img src="{{ url_for('static', filename=itemimg.image) }}" class="img-fluid d-block w-100 carousel-image" alt="Imagen de carrusel {{ loop.index }}">
+      </div>
+      {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carrusel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carrusel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Siguiente</span>
+  </button>
+</div>
+
+<div class="contcolor text-black text-center d-flex justify-content-center align-items-center my-5">
+    <h1>Lavados de autos desde $4,99</h1>
+</div>
+
+<section>
+  <div class="container my-4">
+    <div class="row">
+      <div class="col-md-6 my-4">
+        <h4 class="express text-center">Mucho más que un lavado 🫧</h4>
+        <p class="texto1 text-center">
+          En Porto Car Wash, te ofrecemos un servicio rápido y eficiente para mantener tu vehículo impecable sin necesidad de invertir mucho tiempo. 
+          Nuestro enfoque está en la calidad y la conveniencia, utilizando tecnología avanzada y productos de alta gama para garantizar resultados excepcionales en cada visita.
+        </p>
+      </div>
+      <div class="col-md-6 d-flex justify-content-center align-items-center">
+        <img class="imagen2 img-fluid rounded" src="{{ url_for('static', filename='images/carrito_limpio.png') }}" alt="Coche lavado">
+      </div>
+    </div>  
+  </div>
+</section>
+
+
+<section class="">
+  <div class="container my-5 contexto2">
+    <div class="row align-items-center">
+        <div class="col-md-6 d-flex justify-content-center align-items-center my-5">
+            <img class="img-fluid img_espacio rounded imagen2" src="{{ url_for('static', filename='images/espacio_amigo.jpg') }}" alt="Espacio para compartir">
+        </div>
+        <div class="col-md-6 d-flex flex-column justify-content-center">
+            <p class="mt-3 text-center">
+                En nuestro lavado de autos, no solo cuidamos de tu vehículo, sino que también hemos creado un espacio para que disfrutes mientras esperas. 
+                A partir de las <strong>5:00 PM</strong>, ofrecemos un ambiente relajado donde puedes compartir con amigos, disfrutando de cervezas, refrescos y otros aperitivos. 
+            </p>
+            <p>
+                Convierte la espera en una experiencia social y agradable. ¡Porque somos mucho más que un lavado de autos, somos un espacio para compartir y disfrutar!
+            </p>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}

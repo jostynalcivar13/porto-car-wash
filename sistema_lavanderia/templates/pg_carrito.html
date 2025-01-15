@@ -1,0 +1,386 @@
+{% extends "plantilla_base_user.html" %}
+
+{% block title %}Carrito de Compra{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='estilo_carrito.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-4">
+    {% if session.get('user_id') %}
+    <div id="userData" data-user-id="{{ session.user_id|tojson|safe }}"></div>
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="productos-section">
+                <h2 class="text-success text-center section-title productos-title">Productos</h2>
+                <div class="product-grid">
+                    {% for producto in productos %}
+                    <div class="card border-success">
+                        <div class="card-body">
+                            <h5 class="card-title text-success mb-0">{{ producto[0] }}</h5>
+                            <p class="price-tag">$ {{ producto[1] }}</p>
+                            <p class="price-tag">Stock: {{ producto[2] }}</p>
+                            <button class="btn btn-success action-button agregar-producto" 
+                                    data-id="{{ producto[3] }}"
+                                    data-nombre="{{ producto[0] }}" 
+                                    data-precio="{{ producto[1] }}"
+                                    data-stock="{{ producto[2] }}">
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="servicios-section">
+                <h2 class="text-danger text-center section-title servicios-title">Servicios</h2>
+                <div class="product-grid">
+                    {% for servicio in servicios %}
+                    <div class="card border-danger">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger mb-0">{{ servicio[0] }}</h5>
+                            <p class="price-tag">$ {{ servicio[1] }}</p>
+                            <button class="btn btn-danger action-button agregar-servicio" 
+                                    data-id="{{ servicio[2] }}"
+                                    data-nombre="{{ servicio[0] }}" 
+                                    data-precio="{{ servicio[1] }}">
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="cart-container">
+                <div class="card border-success shadow">
+                    <div class="card-header bg-success text-white py-3">
+                        <h5 class="mb-0 text-center">Carrito de Compras</h5>
+                        
+                    </div>
+                    <div class="card-body p-0">
+                        <ul id="listaCarrito" class="list-group list-group-flush"></ul>
+                    </div>
+                    <div class="card-footer bg-white cart-footer">
+                        <div class="d-flex justify-content-between align-items-center mb-3 px-3">
+                            <strong>Total:</strong>
+                            <span class="text-success fs-5">$<span id="totalCarrito">0.00</span></span>
+                        </div>
+                        <button id="vaciarCarrito" class="btn btn-outline-danger action-button">
+                            Vaciar Carrito
+                        </button>
+                        <div id="enviarCarrito"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Cantidad -->
+<div id="modalCantidad" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Seleccionar Cantidad</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="nombreProductoModal" class="text-center fw-bold fs-5 mb-4"></p>
+                <div id="stockDisponible" class="text-center text-muted mb-3"></div>
+                <div class="form-group">
+                    <label for="inputCantidad" class="form-label">Cantidad:</label>
+                    <input type="number" id="inputCantidad" class="form-control form-control-lg text-center" min="1" value="1">
+                    <div id="errorStock" class="text-danger mt-2 text-center" style="display: none;">
+                        Stock no disponible
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary action-button" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success action-button" id="confirmarCantidad">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL PARA TURNO-->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="appointmentModalLabel">Agendar Turnos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formTurno">
+            <!-- Número de Cédula -->
+            <div class="mb-3">
+              <label for="cedula" class="form-label text-success">Número de Cédula:</label>
+              {% if session.user_cedula %}
+              <span class="me-3 text-danger">{{ session.user_cedula }}</span>
+              {% endif %}
+            </div>
+  
+
+            <!-- Fecha -->
+            <div class="mb-3">
+              <label for="fecha" class="form-label text-success">Fecha:</label>
+              <input type="date" class="form-control border-danger" id="fecha" name="fecha" required>
+            </div>
+  
+            <div class="mb-3">
+              <label for="hora" class="form-label text-success">Hora:</label>
+              <input type="time" class="form-control border-danger" id="hora" name="hora" required step="3600">
+            </div>
+            <div class="alert alert-info">
+                <strong>Info!</strong> Revisa bien los servicios que quieres agendar!
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" id="EnviarTodo" class="btn btn-success">
+                {% if session.user_cedula %}
+                Confirmar Turno
+                {% else %}
+                Inicie sesión para agendar
+                {% endif %}
+              </button>
+            </div>
+          </form>
+          <div id="mensajeError" class="alert alert-danger mt-3" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = new bootstrap.Modal(document.getElementById('modalCantidad'));
+        const listaCarrito = document.getElementById('listaCarrito');
+        const totalCarrito = document.getElementById('totalCarrito');
+        const botonVaciar = document.getElementById('vaciarCarrito');
+        const nombreProductoModal = document.getElementById('nombreProductoModal');
+        const stockDisponible = document.getElementById('stockDisponible');
+        const inputCantidad = document.getElementById('inputCantidad');
+        const errorStock = document.getElementById('errorStock');
+        let productoTemporal = null;
+        let carrito = [];
+        const fec = document.getElementById('fecha');
+        const hora = document.getElementById('hora');
+        const userId = document.getElementById('userData')?.dataset.userId;
+        const botonConfirmarTurno = document.getElementById("EnviarTodo");
+        const modalTurno = document.getElementById("appointmentModal");
+
+
+        document.querySelectorAll('.agregar-producto').forEach(boton => {
+            boton.addEventListener('click', () => {
+                const stock = parseInt(boton.getAttribute('data-stock'));
+                productoTemporal = {
+                    id: parseInt(boton.getAttribute('data-id')),
+                    nombre: boton.getAttribute('data-nombre'),
+                    precio: parseFloat(boton.getAttribute('data-precio')),
+                    stock: stock,
+                    esServicio: false
+                };
+                
+                nombreProductoModal.textContent = `Producto: ${productoTemporal.nombre}`;
+                stockDisponible.textContent = `Stock disponible: ${stock}`;
+                inputCantidad.value = '1';
+                inputCantidad.max = stock;
+                errorStock.style.display = 'none';
+                
+                modal.show();
+            });
+        });
+
+        document.getElementById('confirmarCantidad').addEventListener('click', () => {
+            const cantidad = parseInt(inputCantidad.value);
+            const stockDisponible = productoTemporal.stock;
+
+            if (cantidad <= 0) {
+                alert('Por favor, ingrese una cantidad válida');
+                return;
+            }
+
+            if (cantidad > stockDisponible) {
+                errorStock.style.display = 'block';
+                return;
+            }
+
+            const productoExistente = carrito.find(item => 
+                item.id === productoTemporal.id && !item.esServicio
+            );
+
+            const cantidadTotal = productoExistente ? 
+                productoExistente.cantidad + cantidad : 
+                cantidad;
+
+            if (cantidadTotal > stockDisponible) {
+                alert(`No hay suficiente stock. Stock disponible: ${stockDisponible}`);
+                return;
+            }
+
+            if (productoExistente) {
+                productoExistente.cantidad = cantidadTotal;
+            } else {
+                carrito.push({
+                    ...productoTemporal,
+                    cantidad: cantidad
+                });
+            }
+
+            actualizarCarrito();
+            modal.hide();
+        });
+
+        document.querySelectorAll('.agregar-servicio').forEach(boton => {
+    boton.addEventListener('click', () => {
+        const servicioId = parseInt(boton.getAttribute('data-id'));
+        const servicioExistente = carrito.find(item => item.id === servicioId && item.esServicio);
+
+        if (servicioExistente) {
+            alert('Este servicio ya está en el carrito.');
+            return;
+        }
+
+        carrito.push({
+            id: servicioId,
+            nombre: boton.getAttribute('data-nombre'),
+            precio: parseFloat(boton.getAttribute('data-precio')),
+            cantidad: 1, // Servicios no tienen múltiples cantidades
+            esServicio: true
+        });
+
+        actualizarCarrito();
+    });
+});
+
+
+        botonVaciar.addEventListener('click', () => {
+            carrito = [];
+            
+            actualizarCarrito();
+        });
+
+        function actualizarCarrito() {
+            listaCarrito.innerHTML = '';
+            let total = 0;
+
+            carrito.forEach((item, indice) => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between';
+                
+                const nombreSpan = document.createElement('span');
+                nombreSpan.textContent = `${item.nombre} ${item.cantidad > 1 ? `(${item.cantidad})` : ''}`;
+                
+                const botonEliminar = document.createElement('button');
+                botonEliminar.className = 'btn btn-sm btn-outline-danger';
+                botonEliminar.textContent = '×';
+                botonEliminar.onclick = () => eliminarDelCarrito(indice);
+
+                const precioSpan = document.createElement('span');
+                precioSpan.className = 'badge bg-success';
+                precioSpan.textContent = `$${(item.precio * item.cantidad).toFixed(2)}`;
+                
+                li.appendChild(nombreSpan);
+                li.appendChild(precioSpan);
+                li.appendChild(botonEliminar);
+                listaCarrito.appendChild(li);
+                
+                total += item.precio * item.cantidad;
+            });
+
+            totalCarrito.textContent = total.toFixed(2);
+            
+            if (total > 0 ) {
+    document.getElementById("enviarCarrito").innerHTML = `
+        <button type="button" class="btn btn-success w-100" id="btnEnviar" data-bs-toggle="modal" data-bs-target="#appointmentModal">Enviar</button>
+        `;
+                    document.getElementById("btnEnviar").addEventListener("click", enviarCarrito);
+              
+                
+        } else {
+    document.getElementById("enviarCarrito").innerHTML = '';
+}
+        }
+
+        function eliminarDelCarrito(indice) {
+            
+            carrito.splice(indice, 1);
+            actualizarCarrito();
+        }
+
+
+        botonConfirmarTurno.addEventListener("click", (event) => {
+        event.preventDefault(); // Evitar el envío del formulario por defecto
+
+        const fecha = fec.value;
+        const horaSeleccionada = hora.value;
+
+        if (!fecha || !horaSeleccionada) {
+            alert("Por favor, selecciona una fecha y hora para agendar.");
+            return;
+        }
+
+        if (!userId) {
+            alert("Inicia sesión para guardar el carrito.");
+            return;
+        }
+
+        const productosParaEnviar = carrito.filter(item => !item.esServicio).map(item => ({
+            producto_id: item.id,
+            cantidad: item.cantidad
+        }));
+
+        const serviciosParaEnviar = carrito.filter(item => item.esServicio).map(item => ({
+            servicio_id: item.id
+        }));
+
+        const datosParaEnviar = {
+            productos: productosParaEnviar,
+            servicios: serviciosParaEnviar,
+            fecha: fecha,
+            hora: horaSeleccionada
+        };
+
+        fetch('/carrito_guardar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datosParaEnviar)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al guardar el carrito');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Carrito guardado correctamente');
+            carrito = [];
+            actualizarCarrito();
+            const bootstrapModal = bootstrap.Modal.getInstance(modalTurno);
+            bootstrapModal.hide(); 
+        })
+        .catch(error => {
+            alert('Error al guardar el carrito: ' + error.message);
+        });
+    });
+    });
+
+
+
+
+</script>
+{% endblock %}

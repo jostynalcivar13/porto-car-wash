@@ -1,0 +1,28 @@
+{% extends "plantilla_base_user.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block extra_css %}
+<!-- Puedes agregar estilos adicionales aquí -->
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Lista de Productos</h1>
+    <div class="row service-list">
+        {% for producto in productos %}
+        <div class="col-md-4 mb-4 service-card">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="service-info">
+                        <h5 class="card-title">{{ producto[0] }}</h5> <!-- Nombre del producto -->
+                        <p class="card-text">{{ producto[1] }}</p>   <!-- Descripción del producto -->
+                        <p class="card-text"><strong>Valor:</strong> ${{ producto[2] }}</p> <!-- Precio del producto -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

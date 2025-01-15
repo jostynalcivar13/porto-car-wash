@@ -1,0 +1,63 @@
+/* Asegurarse de que las imágenes se ajusten al tamaño del contenedor */
+.service-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.service-card {
+    flex: 1 1 300px; /* Asegúrate de que el tamaño mínimo sea apropiado */
+    max-width: 300px; /* Limitar el ancho máximo de cada tarjeta */
+    display: flex;
+    flex-direction: column; /* Organizar la imagen y el texto en columnas */
+    border: 1px solid #ddd; /* Borde suave para mejorar la visibilidad */
+    border-radius: 8px;
+    padding: 10px;
+    box-sizing: border-box; /* Incluir padding en el cálculo del tamaño */
+}
+
+.service-info {
+    padding: 10px;
+    flex-grow: 1; /* Asegura que la información ocupe el espacio necesario */
+}
+
+.service-image {
+    width: 100%; /* Ajustar la imagen al 100% del ancho de la tarjeta */
+    height: auto;
+    object-fit: contain; /* Mantener la relación de aspecto */
+    margin-top: 10px; /* Separar la imagen del texto */
+    max-height: 200px; /* Limitar la altura máxima de la imagen */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column; /* Organiza la imagen y el texto verticalmente */
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* Para el texto en los productos */
+.card-text strong {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Hacer las tarjetas más consistentes */
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}

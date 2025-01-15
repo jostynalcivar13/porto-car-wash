@@ -1,0 +1,32 @@
+.icon-card {
+    border: 1px solid #092046;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .icon-card:hover {
+    transform: scale(1.05);
+    background-color: rgb(167, 215, 235);
+  }
+  .icon-card i {
+    font-size: 2.5rem;
+    color: #3db42d;
+  }
+  .icon-card p {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  .icon-card {
+    background-color: #ffffff; /* Fondo blanco para contraste */
+    border: 1px solid #e0e0e0; /* Borde gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    transition: transform 0.3s, box-shadow 0.3s; /* Animación suave */
+}
+
+.icon-card:hover {
+    background-color: #f0f8ff; /* Fondo azul claro al pasar el mouse */
+    transform: scale(1.05); /* Escala ligera al pasar el mouse */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2); /* Aumenta la sombra */
+}

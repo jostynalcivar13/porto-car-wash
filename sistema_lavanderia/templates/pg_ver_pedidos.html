@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+
+{%block title%} Ver pedidos {%endblock%}
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4 text-warning">Pedidos Pendientes</h2>
+            <div class="row">
+                {% for pedido in pedidos_pendientes %}
+                <div class="col-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ pedido[1] }}</h5>
+                            <p class="card-text">{{ pedido[2] }}</p>
+                            <p class="card-text"><strong>Valor:</strong> ${{ pedido[3] }}</p>
+                            <p class="card-text"><small class="text-muted">Fecha: {{ pedido[4] }}</small></p>
+                            <span class="badge bg-warning">Pendiente</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="text-center mb-4 text-success">Pedidos Completados</h2>
+            <div class="row">
+                {% for pedido in pedidos_completados %}
+                <div class="col-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ pedido[1] }}</h5>
+                            <p class="card-text">{{ pedido[2] }}</p>
+                            <p class="card-text"><strong>Valor:</strong> ${{ pedido[3] }}</p>
+                            <p class="card-text"><small class="text-muted">Fecha: {{ pedido[4] }}</small></p>
+                            <span class="badge bg-success">Completado</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

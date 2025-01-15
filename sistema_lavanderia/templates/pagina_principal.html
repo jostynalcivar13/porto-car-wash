@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Página Principal{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='estilospaginap.css') }}">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container my-5">
+  <h1 class="text-center">Menú Principal</h1>
+
+  <div class="row g-3">
+    {% for button in buttons %}
+    <div class="col-6 col-md-3">
+      <div class="icon-card">
+        
+        <a href="{{ button.url }}" class="btn btn-outline-primary d-flex align-items-center justify-content-center" style="height: 80px;">
+          <i class="bi bi-{{ button.icon }} me-2" style="font-size: 1.5rem;"></i>
+          {{ button.text }}
+      </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
+
+

@@ -1,0 +1,56 @@
+{% extends "plantilla_base_user.html" %}
+{%block title%} Inicio de sesión {%endblock%}
+
+{%block extra_css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='estilo_inicio.css') }}">
+{%endblock%}
+{% block content %}
+<div class="containerPrincipal d-flex justify-content-center align-items-center mt-5;">
+    <div class="card login-card">
+        <h2 class="text-center text-light">Inicio de Sesión</h2>
+        <form id="loginForm" method="POST">
+            <div class="mb-3">
+                <label for="user" class="form-label text-light">Usuario</label>
+                <input type="text" class="form-control" id="user" name="user" placeholder="Ingrese su usuario" required>
+            </div>
+            <div class="mb-3">
+                <label for="pass" class="form-label text-light">Contraseña</label>
+                <input type="password" class="form-control" id="pass" name="pass" placeholder="Ingrese su contraseña" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Iniciar Sesión</button>
+        </form>
+        <div id="errorMessage" class="mt-3 text-danger text-center" style="display: none;"></div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const user = document.getElementById("user").value;
+        const pass = document.getElementById("pass").value;
+        const errorMessage = document.getElementById("errorMessage");
+
+        const response = await fetch('/inicioSesion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user, pass })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert(`Bienvenido ${data.nombres} ${data.apellidos}`);
+            errorMessage.style.display = "none";
+            errorMessage.textContent = "";
+            window.location.href = "/";
+
+        } else {
+            const errorData = await response.json();
+            errorMessage.textContent = errorData.error;
+            errorMessage.style.display = "block";
+        }
+    });
+</script>
+{% endblock %}

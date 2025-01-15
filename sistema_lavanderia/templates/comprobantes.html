@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}
+ Comprobantes
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Comprobantes Generados</h2>
+
+    <!-- Sección de búsqueda -->
+    <div class="mb-4">
+        <form method="GET" action="/buscar_comprobantes" class="d-flex justify-content-center">
+            <input type="text" name="cedula" class="form-control w-50" placeholder="Ingrese la cédula del cliente" required>
+            <button type="submit" class="btn btn-primary ms-2">Buscar</button>
+            <a href="/comprobantes.html" class="btn btn-primary ms-2" >Limpiar</a>
+        </form>
+    </div>
+
+    <!-- Tabla de comprobantes -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered mt-3">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>#</th>
+                    <th>Nombres</th>
+                    <th>Cédula/RUC</th>
+                    <th>Fecha y Hora</th>
+                    <th>Servicio</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for factura in facturas %}
+                <tr>
+                    <td>{{ factura.id_factura }}</td>
+                    <td>{{ factura.nombres }}</td>
+                    <td>{{ factura.ci_ruc }}</td>
+                    <td>{{ factura.fecha_hora }}</td>
+                    <td>{{ factura.servicio }}</td>
+                    <td>${{ factura.total }}</td>
+                    <td>
+                        <a href="/imprimir/{{ factura.id_factura }}" class="btn btn-primary btn-sm" target="_blank">Imprimir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% for factura in facturasCar %}
+                <tr>
+                    <td>{{ factura.id_factura }}</td>
+                    <td>{{ factura.nombres }} {{ factura.apellidos }}</td>
+                    <td>{{ factura.cedula }}</td>
+                    <td>{{ factura.fecha_hora }}</td>
+                    <td></td>
+                    <td>${{ factura.total }}</td>
+                    <td>
+                        <a href="/imprimirFac/{{ factura.id_factura }}" class="btn btn-primary btn-sm" target="_blank">Imprimir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

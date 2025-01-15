@@ -1,0 +1,125 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+}
+
+footer {
+  margin-top: auto;
+}
+.service-info {
+  width: 40%;
+}
+.card-body {
+  display: flex;
+}
+.service-image {
+  width: auto;
+  height: 150px;
+}
+.contcolor {
+  height: 20vh;
+}
+.contcolor h1 {
+  font-family: "Bowlby One SC", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  background: linear-gradient(to right, red, green);
+  background-clip: text;
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; 
+}
+.express {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 200%;
+  font-style: italic;
+}
+.images {
+  width: 60%;
+  height: 90%;
+  justify-content: center;
+}
+#menu {
+  background-color: rgb(40, 38, 38);
+}
+.contexto2 {
+  background-color: #aba49b;
+}
+.conteFooter {
+  background-color: black;
+  justify-content: end;
+}
+.boton {
+  background-color: rgb(57, 215, 139);
+}
+.copyright {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  color: #dc3545; 
+  font-size: 1.5rem;
+  padding: 0.375rem 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+  color: #bb2d3b; 
+}
+
+.logo.bi-person-circle {
+  display: inline-block;
+  padding: 0.5rem;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: transform 0.2s;
+}
+
+.logo.bi-person-circle:hover {
+  transform: scale(1.1);
+}
+
+/*diseño menú desplegable */
+.dropdown-menu {
+  background-color: #ffffff;
+  border: 1px solid rgba(220, 53, 69, 0.2); 
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+}
+
+.dropdown-item {
+  color: #dc3545; 
+  font-family: 'Josefin Sans', sans-serif;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #bb2d3b;  
+  transform: translateX(5px);  
+}
+
+.dropdown-item:active {
+  background-color: #dc3545;
+  color: white;
+}
+
+.dropdown-item:focus {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}

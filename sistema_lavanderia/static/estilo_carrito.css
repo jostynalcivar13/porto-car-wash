@@ -1,0 +1,116 @@
+.card {
+    transition: transform 0.2s ease-in-out;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.productos-section,
+.servicios-section {
+    padding: 2rem 0;
+}
+
+.section-title {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.productos-title::after {
+    background-color: var(--bs-success);
+}
+
+.servicios-title::after {
+    background-color: var(--bs-danger);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1rem;
+}
+
+.price-tag {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+    color: #000; /* Precio en negro */
+}
+
+.action-button {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.cart-container {
+    position: sticky;
+    top: 2rem;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #eee;
+}
+
+#listaCarrito {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.cart-footer {
+    text-align: center;
+}
+
+#vaciarCarrito {
+    display: block;
+    margin: 0 auto;
+    max-width: 200px;
+}
+
+#enviarCarrito {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}

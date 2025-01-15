@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura Electrónica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="text-center">
+            <img src="" alt="Logo PortoCash" class="mb-3" style="max-width: 150px;">
+        </div>
+        <h4>Estimado Cliente:</h4>
+        <p><strong>{{ data['cliente'] }}</strong></p>
+        <p>
+            Reciba un cordial saludo de quienes hacemos SIGE
+            <a href="https://portowash.com" target="_blank">www.portowash.com</a>.
+        </p>
+        <p>
+            Nos complace informarle que, usted ha recibido un documento electrónico emitido por:
+            <strong>PortoCar Wash</strong>
+        </p>
+        <hr>
+        
+        <p><strong>Tipo Documento:</strong> {{ data['tipo_documento'] }}</p>
+        <p><strong>Número Documento:</strong> {{ data['numero_documento'] }}</p>
+        <p><strong>Fecha Emisión:</strong> {{ data['fecha_emision'] }}</p>
+        <hr>
+        <p class="text-center">Gracias por su confianza.</p>
+    </div>
+</body>
+</html>

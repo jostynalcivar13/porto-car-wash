@@ -1,0 +1,26 @@
+a.btn.volver {
+    padding: 10px 20px;
+    background-color: #006400; 
+    color: white;
+    border: none;
+    border-radius: 20px;
+    text-decoration: none; 
+    display: inline-block; 
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+a.btn.volver:hover {
+    background-color: #8B0000;
+}
+
+a.btn.volver:active {
+    background-color: #FF0000; 
+}
+
+
+button.btn.botonTurno{
+    align-items: center; 
+    margin-bottom: 20px;
+}

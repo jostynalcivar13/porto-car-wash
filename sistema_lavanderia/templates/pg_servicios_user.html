@@ -1,0 +1,25 @@
+{% extends "plantilla_base_user.html" %}
+
+{% block title %}Servicios{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Lista de Servicios</h1>
+  <div class="row service-list">
+
+    {% for servicio in servicios %}
+    <div class="col-md-4 mb-4 service-card">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="service-info">
+            <h5 class="card-title"> {{servicio[0]}}</h5>
+            <p class="card-text">{{servicio[1]}}</p>
+            <p class="card-text"><strong>Valor:</strong> ${{ servicio[2] }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

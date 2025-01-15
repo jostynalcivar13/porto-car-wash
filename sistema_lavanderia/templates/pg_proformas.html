@@ -1,0 +1,95 @@
+{%extends "base.html"%}
+
+{%block title%}Proformas. {%endblock%}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+            <h2 class="text-center mb-4 text-success">Proformas  Pendientes</h2>
+                {% for carrito in carritos %}
+                <div class="col-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary" ><i class="bi bi-person-circle"></i><strong>Nombre:</strong> {{ carrito[1] }}  {{ carrito[2] }}</h5>
+                            <p class="card-text"></p>
+                            <p class="card-text"><strong>Cédula:</strong> {{ carrito[3] }}</p>
+                            <p class="card-text"><strong>Total:</strong> ${{ carrito[5] }}</p>
+                            <p class="card-text"><small class="text-muted">Fecha: {{ carrito[4] }}</small></p>
+                            {%if servicios%}
+                                 <p class="card-text"><strong>Servicios.</strong> </p>
+                                {%for servicio in servicios%}
+                                {%if carrito[0]==servicio[0]%}
+                                <p class="card-text"><small class="text-muted">Nombre: {{servicio[1] }} Precio: {{servicio[2]}}</small></p>   
+                                {%endif%}
+                                {%endfor%}
+                            {%endif%}
+                            {%if productos%}
+                                 <p class="card-text"><strong>Productos.</strong> </p>
+                                {%for producto in productos%}
+                                {%if carrito[0]==producto[0]%}
+                                <p class="card-text"><small class="text-muted">Nombre: {{producto[1] }} Precio: {{producto[2]}}  Cantidad: {{producto[3]}}</small></p>   
+                                {%endif%}
+                                {%endfor%}
+                            {%endif%}
+                            <div class="d-flex justify-content-around mt-4">
+                                <button class="btn btn-danger" onclick="eliminarCarrito('{{carrito[0]}}')">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                                <button class="btn btn-success" onclick="completarPedido('{{carrito[0]}}')">
+                                    <i class="bi bi-check-circle"></i> Facturar
+                                </button>
+                            
+                            </div>
+                        </div>
+                       
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+       
+
+    </div>
+</div>
+<script>
+    function eliminarCarrito(id_carrito){
+        if (!confirm('¿Está seguro de eliminar este carrito?')) return;
+    
+    fetch(`/eliminarCarrito/${id_carrito}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error al eliminar el carrito');
+        return response.json();
+    })
+    .then(data => {
+        alert('Carrito eliminado correctamente');
+        location.reload(); 
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+
+    
+}
+function completarPedido(id_carrito) {
+    fetch(`/facturarTurno/${id_carrito}`, {
+        method: 'POST'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error al facturar el carrito');
+        return response.json(); 
+    })
+    .then(data => {
+        const id_factura = data.id_factura; 
+        window.location.href = `/imprimirFac/${id_factura}`; 
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+}
+
+ 
+</script>
+{% endblock %}
