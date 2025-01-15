@@ -9,7 +9,7 @@ def create_app():
     app.config['MYSQL_HOST'] = 'mysql-sofuer-porto-car-wash.g.aivencloud.com'
     app.config['MYSQL_USER'] = 'avnadmin'
     app.config['MYSQL_PASSWORD'] = 'AVNS_USU_gdEw2HXwwO8UhFQ'
-    app.config['MYSQL_DB'] = 'defaultdb'
+    app.config['MYSQL_DB'] = 'sistema_lavanderia'
     app.config['MYSQL_PORT'] = 19682
     app.config['MYSQL_SSL_MODE'] = 'REQUIRED'
     
