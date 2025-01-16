@@ -17,7 +17,7 @@ cursor = mysql.connection.cursor()
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not session.get('logged_in'):
+        if not session.get('logged_inAdmin'):
             return redirect(url_for('admin_login_page'))
         return f(*args, **kwargs)
     return decorated_function
@@ -251,7 +251,6 @@ def index():
         {'icon': 'person', 'text': 'Clientes', 'url':'/cliente.html'},
         {'icon': 'database', 'text': 'Productos', 'url':'/productos.html'},
         {'icon': 'file-earmark-check', 'text': 'Servicios','url':'/servicios.html'},
-        {'icon': 'cash-stack', 'text': 'Cuentas por Cobrar'},
         {'icon': 'file-earmark-check', 'text': 'Nueva Factura','url':'/factura.html'},
         {'icon': 'file-earmark-text', 'text': 'Proformas','url':'/ver_proformas.html'},
         {'icon': 'receipt', 'text': 'Comprobantes','url':'/comprobantes.html'},
@@ -918,7 +917,7 @@ def admin_login():
 
     if admin_data:
         session['admin_id'] = admin_data[0]
-        session['logged_in'] = True
+        session['logged_inAdmin'] = True
         return jsonify({"id_admin": admin_data[0], "nombre": f"{admin_data[2]} {admin_data[3]}"})
     else:
         return jsonify({"error": "Credenciales no válidas para Administrador."}), 404
