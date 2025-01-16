@@ -3,8 +3,8 @@
 {%block title%}Proformas. {%endblock%}
 
 {% block content %}
-<div class="container-fluid mt-4">
-    <div class="row">
+<div class="container d-flex justify-content-center">
+    <div class="row" style="max-width: 800px; width: 100%;">
             <h2 class="text-center mb-4 text-success">Proformas  Pendientes</h2>
                 {% for carrito in carritos %}
                 <div class="col-12 mb-3">
@@ -15,22 +15,9 @@
                             <p class="card-text"><strong>Cédula:</strong> {{ carrito[3] }}</p>
                             <p class="card-text"><strong>Total:</strong> ${{ carrito[5] }}</p>
                             <p class="card-text"><small class="text-muted">Fecha: {{ carrito[4] }}</small></p>
-                            {%if servicios%}
-                                 <p class="card-text"><strong>Servicios.</strong> </p>
-                                {%for servicio in servicios%}
-                                {%if carrito[0]==servicio[0]%}
-                                <p class="card-text"><small class="text-muted">Nombre: {{servicio[1] }} Precio: {{servicio[2]}}</small></p>   
-                                {%endif%}
-                                {%endfor%}
-                            {%endif%}
-                            {%if productos%}
-                                 <p class="card-text"><strong>Productos.</strong> </p>
-                                {%for producto in productos%}
-                                {%if carrito[0]==producto[0]%}
-                                <p class="card-text"><small class="text-muted">Nombre: {{producto[1] }} Precio: {{producto[2]}}  Cantidad: {{producto[3]}}</small></p>   
-                                {%endif%}
-                                {%endfor%}
-                            {%endif%}
+
+
+                            
                             <div class="d-flex justify-content-around mt-4">
                                 <button class="btn btn-danger" onclick="eliminarCarrito('{{carrito[0]}}')">
                                     <i class="bi bi-trash"></i> Eliminar
@@ -38,7 +25,31 @@
                                 <button class="btn btn-success" onclick="completarPedido('{{carrito[0]}}')">
                                     <i class="bi bi-check-circle"></i> Facturar
                                 </button>
+                                <button class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#detalle-{{loop.index}}">
+                                    <i class="bi bi-eye"></i> Ver Detalles
+                                </button>
                             
+                            </div>
+                        </div>
+                         <!-- Detalles de la proforma -->
+                         <div id="detalle-{{loop.index}}" class="collapse mt-3">
+                            <div class="card card-body">
+                                {%if servicios%}
+                                 <p class="card-text"><strong>Servicios.</strong> </p>
+                                {%for servicio in servicios%}
+                                {%if carrito[0]==servicio[0]%}
+                                <p class="card-text"><small class="text-muted">{{servicio[1] }} Precio: {{servicio[2]}}</small></p>   
+                                {%endif%}
+                                {%endfor%}
+                            {%endif%}
+                            {%if productos%}
+                                 <p class="card-text"><strong>Productos.</strong> </p>
+                                {%for producto in productos%}
+                                {%if carrito[0]==producto[0]%}
+                                <p class="card-text"><small class="text-muted">{{producto[1] }} Precio: {{producto[2]}}  Cantidad: {{producto[3]}}</small></p>   
+                                {%endif%}
+                                {%endfor%}
+                            {%endif%}
                             </div>
                         </div>
                        

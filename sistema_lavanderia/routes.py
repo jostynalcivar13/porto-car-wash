@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import Flask, abort, jsonify, render_template, current_app as app, session, make_response
 from flask import url_for,redirect
 from flask import Flask,render_template, request
@@ -7,10 +8,19 @@ from flask_mysqldb import MySQL
 from flask_cors import CORS
 from flask import Blueprint
 from . import mysql
+from flask import send_from_directory
 
 routes = Blueprint('routes', __name__)
 
 cursor = mysql.connection.cursor()
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            return redirect(url_for('admin_login_page'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/logout')
 def logout():
@@ -98,6 +108,9 @@ def guardarCarrito():
 
 @app.route('/')
 def paguser():
+    phone_number = "+593992218555"  
+    message = "¡Hola!%20Estoy%20interesado%20en%20sus%20servicios%20de%20lavados%20de%20vehículos."  
+    
     
     ima = [
         
@@ -105,7 +118,8 @@ def paguser():
         {'image': 'images/imagen_horario_car.jpeg'},
         {'image': 'images/publi_lava.jpg'}
     ]
-    return render_template('pagina_user.html', ima=ima)
+    return render_template('pagina_user.html', ima=ima, phone_number=phone_number, message=message)
+
 
 @app.route('/user_productos.html')
 def user_producto():
@@ -231,6 +245,7 @@ def iniciarSesion():
 #Logica de las interfaces de administración
 
 @app.route('/administrador')
+@admin_required
 def index():
     buttons = [
         {'icon': 'person', 'text': 'Clientes', 'url':'/cliente.html'},
@@ -249,6 +264,7 @@ def index():
     return render_template('pagina_principal.html', buttons=buttons)
 
 @app.route('/ver_proformas.html')
+@admin_required
 def ver_proformas():
     cursor = mysql.connection.cursor()
     
@@ -292,6 +308,7 @@ def ver_proformas():
 
 
 @app.route('/eliminarCarrito/<int:id_carrito>', methods=['DELETE'])
+@admin_required
 def eliminar_carrito(id_carrito):
     cursor = mysql.connection.cursor()
     query = "DELETE FROM carrito WHERE id_carrito = %s"
@@ -301,6 +318,7 @@ def eliminar_carrito(id_carrito):
     return jsonify({"mensaje": "Carrito eliminado correctamente"}), 200
 
 @app.route('/facturarTurno/<int:id_carrito>', methods=['POST'])
+@admin_required
 def completar_turno(id_carrito):
     cursor = mysql.connection.cursor()
     queryTotal="""
@@ -344,6 +362,7 @@ def completar_turno(id_carrito):
 
 
 @app.route('/imprimirFac/<int:id_factura>', methods=['GET'])
+@admin_required
 def imprimir_factura_Car(id_factura):
     # Consultar la factura específica por ID
     cursor = mysql.connection.cursor()
@@ -388,6 +407,7 @@ def imprimir_factura_Car(id_factura):
     return render_template('imprimir_factura.html', factura=factura_dict,servicios=servicios,productos=productos)
 
 @app.route('/turnoBuscar',methods=['POST'])
+@admin_required
 def buscarTurno():
     data=request.json
     cedula=data.get('cedula')
@@ -409,6 +429,7 @@ def buscarTurno():
         })
 
 @app.route('/eliminarTurno/<int:id_turno>', methods=['DELETE'])
+@admin_required
 def eliminar_turno(id_turno):
     cursor = mysql.connection.cursor()
     query = "DELETE FROM turno WHERE id_turno = %s"
@@ -418,6 +439,7 @@ def eliminar_turno(id_turno):
     return jsonify({"mensaje": "Turno eliminado correctamente"}), 200
 
 @app.route('/ver_pedidos.html', methods=['GET', 'POST'])
+@admin_required
 def verpedidos():
     cursor=mysql.connection.cursor()
     query="Select id_pedido,nombre,descripcion,total, fecha, estado from pedido where estado='pendiente';"
@@ -430,11 +452,13 @@ def verpedidos():
     return render_template('pg_ver_pedidos.html', pedidos_pendientes=pendientes,pedidos_completados=completados)
 
 @app.route('/pedidos.html')
+@admin_required
 def generarPedido():
 
     return render_template('pg_pedidos.html')
 
 @app.route('/pedido', methods =['POST'])
+@admin_required
 def registrarpedido():
     data =request.json
     nombre=data.get('nombre')
@@ -449,6 +473,7 @@ def registrarpedido():
     return jsonify({"message": "Pedido agregado con éxito"}), 200
 
 @app.route('/pedidoBuscar',methods=['POST'])
+@admin_required
 def buscarpedido():
     data=request.json
     nombre=data.get('nombre')
@@ -469,6 +494,7 @@ def buscarpedido():
         })
 
 @app.route('/eliminarPedido/<int:id_pedido>', methods=['DELETE'])
+@admin_required
 def eliminar_pedido(id_pedido):
     cursor = mysql.connection.cursor()
     query = "DELETE FROM pedido WHERE id_pedido = %s"
@@ -478,6 +504,7 @@ def eliminar_pedido(id_pedido):
     return jsonify({"mensaje": "Pedido eliminado correctamente"}), 200
 
 @app.route('/completarPedido/<int:id_pedido>', methods=['PUT'])
+@admin_required
 def completar_pedido(id_pedido):
     cursor = mysql.connection.cursor()
     query = "UPDATE pedido SET estado = 'completado' WHERE id_pedido = %s"
@@ -488,10 +515,12 @@ def completar_pedido(id_pedido):
     
         
 @app.route('/cliente.html')
+@admin_required
 def pagcli():
     return render_template('cliente.html')
 
 @app.route('/cliente', methods=['POST'])
+@admin_required
 def buscar_cliente():
     data = request.json 
     cedula = data.get('cedula')
@@ -514,10 +543,12 @@ def buscar_cliente():
         })
 
 @app.route('/productos.html')
+@admin_required
 def pagpro():
     return render_template('pg_productos.html')
 
 @app.route('/producto', methods=['POST'])
+@admin_required
 def buscar_producto():
     data = request.json 
     nom = data.get('nombre')
@@ -541,6 +572,7 @@ def buscar_producto():
         return jsonify({"error": "No hay productos registrados"}), 404
 
 @app.route('/producto/agregar-actualizar', methods=['POST'])
+@admin_required
 def agregar_actualizar_producto():
     data = request.json
     nom = data.get('nombre')
@@ -557,10 +589,12 @@ def agregar_actualizar_producto():
 
 
 @app.route('/servicios.html')
+@admin_required
 def pagser():
     return render_template('pg_servicios.html')
 
 @app.route('/servicios', methods=['POST'])
+@admin_required
 def buscar_servicio():
     data = request.json 
     nom = data.get('nombre')
@@ -584,6 +618,7 @@ def buscar_servicio():
         return jsonify({"error": "No hay servicio registrado"}), 404
 
 @app.route('/servicioAgregar',methods=['POST'])
+@admin_required
 def servicio_agre_act():
     data = request.json
     nom = data.get('nombre')
@@ -600,6 +635,7 @@ def servicio_agre_act():
     return jsonify({"message": "Servicio agregado con éxito"}), 200
 
 @app.route('/factura.html', methods=['GET'])
+@admin_required
 def mostrar_formulario():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT id_factura FROM factura_no_cliente order by id_factura desc")
@@ -612,6 +648,7 @@ def mostrar_formulario():
 
 # Ruta para generar la factura
 @app.route('/generar-factura', methods=['POST'])
+@admin_required
 def generar_factura():
     # Obtener los datos del formulario
     id_factura = request.form.get('id_factura')
@@ -644,6 +681,7 @@ def generar_factura():
     )
     
 @app.route('/comprobantes.html', methods=['GET'])
+@admin_required
 def ver_comprobantes():
     # Consultar todas las facturas en la base de datos
     cursor = mysql.connection.cursor()
@@ -688,6 +726,7 @@ def ver_comprobantes():
 
 
 @app.route('/buscar_comprobantes', methods=['GET'])
+@admin_required
 def buscar_comprobantes():
     cedula = request.args.get('cedula', None)
     
@@ -749,6 +788,7 @@ def buscar_comprobantes():
     )
 
 @app.route('/imprimir/<int:id_factura>', methods=['GET'])
+@admin_required
 def imprimir_factura(id_factura):
     # Consultar la factura específica por ID
     cursor = mysql.connection.cursor()
@@ -774,10 +814,12 @@ def imprimir_factura(id_factura):
     return render_template('imprimir_factura.html', factura=factura_dict)
 
 @app.route('/trabajadores.html')
+@admin_required
 def pagtrabajadores():
     return render_template('pg_trabajadores.html')
 
 @app.route('/trabajador', methods=['POST'])
+@admin_required
 def buscar_trabajador():
     data = request.json
     cedula = data.get('cedula', None)
@@ -819,6 +861,7 @@ def buscar_trabajador():
 
 # Ruta para agregar o actualizar un trabajador
 @app.route('/trabajador/agregar-actualizar', methods=['POST'])
+@admin_required
 def agregar_actualizar_trabajador():
     data = request.json
     nombres = data.get('nombres', None)
@@ -879,3 +922,8 @@ def admin_login():
         return jsonify({"id_admin": admin_data[0], "nombre": f"{admin_data[2]} {admin_data[3]}"})
     else:
         return jsonify({"error": "Credenciales no válidas para Administrador."}), 404
+
+@app.route('/logo_porto.ico')
+def favicon():
+    return send_from_directory('static/images', 'logo_porto.ico', mimetype='image/vnd.microsoft.icon')
+
